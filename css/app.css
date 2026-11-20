@@ -204,7 +204,9 @@ dialog.keeper::backdrop { background: color-mix(in oklab, var(--color-ink) 45%, 
 .field select:focus-visible { outline: 3px solid var(--color-focus); outline-offset: 2px; }
 
 @media (max-width: 70rem) {
-  .lab { grid-template-columns: minmax(0, 1fr); grid-template-rows: minmax(0, 1fr) auto; }
+  .app { height: auto; min-height: 100dvh; }
+  .view { min-height: 75dvh; }
+  .lab { grid-template-columns: minmax(0, 1fr); grid-template-rows: 60dvh auto; }
   .note { align-self: stretch; }
   .zoo { grid-template-columns: repeat(5, minmax(0, 1fr)); grid-template-rows: repeat(6, minmax(0, 1fr)); }
 }
