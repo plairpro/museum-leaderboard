@@ -67,5 +67,5 @@ js/board.js         экран рейтинга, режимы, смотрите�
 js/sim.js           симуляция молекул (canvas)
 js/register.js      выбор аватаров
 js/stand.js         тестовый стенд
-css/app.css         стили (тема Hum: бумага, картон, шрифт Nunito)
+css/app.css         стили (тема Hum: бумага, картон, шрифт Unbounded и Exo 2)
 ```

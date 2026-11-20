@@ -229,21 +229,22 @@
 
   /* ---------- виджет выбора аватара для игр ---------- */
   var PICKER_CSS = [
-    ':host{--p-paper:oklch(97% 0.012 95);--p-card:oklch(98.8% 0.007 95);--p-ink:oklch(20% 0.014 255);--p-muted:oklch(47% 0.014 255);',
-    '--p-edge:oklch(83% 0.04 88);--p-rule:oklch(87% 0.016 95);--p-accent:oklch(87% 0.175 96);--p-accent-deep:oklch(72% 0.16 92);--p-focus:oklch(50% 0.17 250);',
-    '--p-font:"Nunito",ui-rounded,system-ui,sans-serif;display:block;font-family:var(--p-font);color:var(--p-ink)}',
+    ':host{--p-bg:oklch(18.5% 0.05 282);--p-ink:oklch(96% 0.02 220);--p-muted:oklch(68% 0.05 250);--p-edge:oklch(38% 0.09 285);',
+    '--p-cyan:oklch(86% 0.15 200);--p-magenta:oklch(70% 0.28 340);--p-focus:oklch(92% 0.19 105);',
+    '--p-font:"Exo 2",ui-sans-serif,system-ui,sans-serif;display:block;font-family:var(--p-font);color:var(--p-ink)}',
     '.wrap{display:flex;flex-direction:column;gap:10px}',
     '.label{font-size:18px;font-weight:600;color:var(--p-muted);margin:0}',
-    '.row{display:flex;gap:10px;overflow-x:auto;padding:4px 2px 12px;scroll-snap-type:x proximity;overscroll-behavior-x:contain}',
+    '.row{display:flex;gap:10px;overflow-x:auto;padding:6px 4px 12px;scroll-snap-type:x proximity;overscroll-behavior-x:contain}',
     '.row.wrap-on{flex-wrap:wrap;overflow:visible}',
     'button{flex:0 0 auto;scroll-snap-align:start;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;min-width:88px;min-height:96px;padding:8px 10px;',
-    'border:0;border-radius:16px;background:var(--p-card);color:var(--p-ink);font:800 20px/1 var(--p-font);cursor:pointer;touch-action:manipulation;',
-    'box-shadow:inset 0 0 0 1px var(--p-rule),0 5px 0 0 var(--p-edge);transition:translate 120ms cubic-bezier(.22,1,.36,1),box-shadow 120ms cubic-bezier(.22,1,.36,1),background-color 120ms linear}',
+    'border:1.5px solid var(--p-edge);border-radius:12px;background:var(--p-bg);color:var(--p-ink);font:800 20px/1 var(--p-font);letter-spacing:.05em;cursor:pointer;touch-action:manipulation;',
+    'transition:box-shadow 220ms cubic-bezier(.22,1,.36,1),border-color 220ms linear,translate 120ms cubic-bezier(.22,1,.36,1)}',
     'button .e{font-size:40px;line-height:1.1}',
-    'button:hover{translate:0 -2px;box-shadow:inset 0 0 0 1px var(--p-rule),0 7px 0 0 var(--p-edge)}',
-    'button:active{translate:0 4px;box-shadow:inset 0 0 0 1px var(--p-rule),0 1px 0 0 var(--p-edge)}',
+    'button:hover{border-color:var(--p-cyan);box-shadow:0 0 6px var(--p-cyan),0 0 20px color-mix(in oklab,var(--p-cyan) 45%,transparent)}',
+    'button:active{translate:0 2px}',
     'button:focus-visible{outline:3px solid var(--p-focus);outline-offset:3px}',
-    'button[aria-pressed="true"]{background:var(--p-accent);box-shadow:0 5px 0 0 var(--p-accent-deep)}',
+    'button[aria-pressed="true"]{border-color:var(--p-magenta);color:var(--p-magenta);text-shadow:0 0 10px var(--p-magenta);',
+    'box-shadow:0 0 6px var(--p-magenta),0 0 24px color-mix(in oklab,var(--p-magenta) 50%,transparent),inset 0 0 18px color-mix(in oklab,var(--p-magenta) 25%,transparent)}',
     '.empty{margin:0;font-size:18px;color:var(--p-muted)}',
     '@media (prefers-reduced-motion:reduce){button{transition:none}}'
   ].join('');

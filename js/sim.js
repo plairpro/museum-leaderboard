@@ -38,6 +38,8 @@
       card: token('--color-card'), edge: token('--color-edge'), ink: token('--color-ink'), ink2: token('--color-ink-2'),
       muted: token('--color-muted'), blue: token('--color-accent-2'), coral: token('--color-accent-3'), mint: token('--color-mint'),
       water: token('--color-water'), waterDeep: token('--color-water-deep'), fringe: token('--color-fringe'), rule: token('--color-rule'),
+      paper: token('--color-paper'), paper3: token('--color-paper-3'), cyan: token('--neon-cyan'), magenta: token('--neon-magenta'), yellow: token('--neon-yellow'), lime: token('--neon-lime'),
+      v: [null, token('--neon-cyan'), token('--neon-lime'), token('--neon-yellow'), token('--neon-magenta')],
       font: token('--font-body')
     };
   };
@@ -280,28 +282,32 @@
   };
 
   P.sprite = function (q) {
-    var r = Math.round(q.r);
-    if (q.sprite && q.spriteR === r) return q.sprite;
-    var pad = Math.ceil(r * 0.35) + 6, s = (r + pad) * 2, dpr = this.dpr;
+    var r = Math.max(6, Math.round(q.r) || 6);
+    if (q.sprite && q.spriteR === r && q.spriteV === q.valence) return q.sprite;
+    var pad = Math.ceil(r * 0.45) + 8, s = (r + pad) * 2, dpr = this.dpr;
     var cv = document.createElement('canvas');
     cv.width = Math.ceil(s * dpr); cv.height = Math.ceil(s * dpr);
     var g = cv.getContext('2d');
     g.scale(dpr, dpr);
     var cx = r + pad, cy = r + pad;
-    // paper disc lit from the top left
-    g.save();
-    g.shadowColor = 'rgba(20, 24, 34, 0.2)';
-    g.shadowBlur = r * 0.35; g.shadowOffsetX = r * 0.07; g.shadowOffsetY = r * 0.14;
-    g.fillStyle = this.col.card;
+    var ring = this.col.v[q.valence] || this.col.cyan;
+    // dark glass disc with an inner glow
+    var fill = g.createRadialGradient(cx - r * 0.3, cy - r * 0.35, Math.abs(r * 0.1), cx, cy, Math.abs(r));
+    fill.addColorStop(0, this.col.paper3 || this.col.card);
+    fill.addColorStop(1, this.col.paper);
+    g.fillStyle = fill;
     g.beginPath(); g.arc(cx, cy, r, 0, TAU); g.fill();
-    g.restore();
-    g.lineWidth = Math.max(1.5, r * 0.05);
-    g.strokeStyle = this.col.edge;
+    // neon ring, drawn twice: halo then core
+    g.save();
+    g.shadowColor = ring; g.shadowBlur = r * 0.45;
+    g.strokeStyle = ring; g.lineWidth = Math.max(2.5, r * 0.07);
     g.beginPath(); g.arc(cx, cy, r - g.lineWidth / 2, 0, TAU); g.stroke();
-    g.font = Math.round(r * 1.08) + 'px ' + EMOJI_FONT;
+    g.shadowBlur = r * 0.15; g.stroke();
+    g.restore();
+    g.font = Math.round(r * 1.05) + 'px ' + EMOJI_FONT;
     g.textAlign = 'center'; g.textBaseline = 'middle';
     g.fillText(q.emoji, cx, cy + r * 0.06);
-    q.sprite = cv; q.spriteR = r; q.spritePad = pad;
+    q.sprite = cv; q.spriteR = r; q.spriteV = q.valence; q.spritePad = pad;
     return cv;
   };
 
@@ -321,17 +327,19 @@
       for (x = 0; x <= w + 8; x += 8) g.lineTo(x, this.surface(x));
       g.lineTo(w, h); g.closePath(); g.fill();
       // torn fringe of the water sheet
-      g.strokeStyle = col.fringe; g.lineWidth = 3;
+      g.save();
+      g.strokeStyle = col.cyan; g.lineWidth = 2.5; g.shadowColor = col.cyan; g.shadowBlur = 18;
       g.beginPath();
-      for (x = 0; x <= w + 8; x += 8) { var y = this.surface(x) - 1.5; if (x === 0) g.moveTo(x, y); else g.lineTo(x, y); }
-      g.stroke();
+      for (x = 0; x <= w + 8; x += 8) { var y = this.surface(x) - 1; if (x === 0) g.moveTo(x, y); else g.lineTo(x, y); }
+      g.stroke(); g.shadowBlur = 4; g.stroke();
+      g.restore();
     }
 
     if (!this.p.length) {
       g.fillStyle = col.muted;
       g.font = '700 ' + Math.round(Math.max(18, h * 0.035)) + 'px ' + col.font;
       g.textAlign = 'center'; g.textBaseline = 'middle';
-      g.fillText('Здесь появятся молекулы группы', w / 2, h * 0.55);
+      g.fillText('Здесь появятся молекулы игроков', w / 2, h * 0.55);
       return;
     }
 
@@ -343,24 +351,24 @@
       var ux = dx / d, uy = dy / d;
       var fadeIn = Math.min(1, b.age / 0.25), fadeOut = Math.min(1, (b.life - b.age) / 0.3);
       g.globalAlpha = Math.max(0, Math.min(fadeIn, fadeOut));
-      if (b.flash) { g.setLineDash([]); g.strokeStyle = col.coral; g.lineWidth = 5; }
-      else { g.setLineDash([7, 8]); g.strokeStyle = col.ink2; g.lineWidth = 3.5; }
+      if (b.flash) { g.setLineDash([]); g.strokeStyle = col.magenta; g.shadowColor = col.magenta; g.lineWidth = 4; g.shadowBlur = 16; }
+      else { g.setLineDash([7, 8]); g.strokeStyle = col.cyan; g.shadowColor = col.cyan; g.lineWidth = 3; g.shadowBlur = 12; }
       g.beginPath();
       g.moveTo(b.a.x + ux * b.a.r * 0.92, b.a.y + uy * b.a.r * 0.92);
       g.lineTo(b.b.x - ux * b.b.r * 0.92, b.b.y - uy * b.b.r * 0.92);
       g.stroke();
     }
     g.setLineDash([]);
-    g.globalAlpha = 1;
+    g.globalAlpha = 1; g.shadowBlur = 0;
 
     // sparks (gas collisions)
     for (i = 0; i < this.sparks.length; i++) {
       var s = this.sparks[i], k = s.age / 0.5;
       g.globalAlpha = 1 - k;
-      g.strokeStyle = col.coral; g.lineWidth = 2.5;
+      g.strokeStyle = col.magenta; g.lineWidth = 2.5; g.shadowColor = col.magenta; g.shadowBlur = 14;
       g.beginPath(); g.arc(s.x, s.y, 4 + k * 16, 0, TAU); g.stroke();
     }
-    g.globalAlpha = 1;
+    g.globalAlpha = 1; g.shadowBlur = 0;
 
     // molecules
     for (i = 0; i < this.p.length; i++) {
@@ -368,9 +376,9 @@
       var sp = this.sprite(q), size = (q.spriteR + q.spritePad) * 2;
       if (q.pulse > 0) {
         g.globalAlpha = q.pulse;
-        g.strokeStyle = col.mint; g.lineWidth = 8;
+        g.strokeStyle = col.lime; g.lineWidth = 5; g.shadowColor = col.lime; g.shadowBlur = 20;
         g.beginPath(); g.arc(q.x, q.y, q.r + 8 + (1 - q.pulse) * 22, 0, TAU); g.stroke();
-        g.globalAlpha = 1;
+        g.globalAlpha = 1; g.shadowBlur = 0;
       }
       g.drawImage(sp, q.x - size / 2, q.y - size / 2, size, size);
       // valence sites: filled ink when used by a bond, blue when free
@@ -385,9 +393,12 @@
       for (var v = 0; v < q.valence; v++) {
         var a = v < used ? angles[v] : q.phase + v * TAU / q.valence;
         var px = q.x + Math.cos(a) * (q.r + dot * 0.2), py = q.y + Math.sin(a) * (q.r + dot * 0.2);
-        g.fillStyle = v < used ? col.ink : col.blue;
+        var vc = col.v[q.valence] || col.cyan;
+        g.fillStyle = v < used ? col.ink : vc;
+        g.shadowColor = vc; g.shadowBlur = 10;
         g.beginPath(); g.arc(px, py, dot, 0, TAU); g.fill();
-        g.strokeStyle = col.card; g.lineWidth = 2; g.stroke();
+        g.shadowBlur = 0;
+        g.strokeStyle = col.paper; g.lineWidth = 2; g.stroke();
       }
     }
   };
