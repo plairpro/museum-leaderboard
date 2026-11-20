@@ -1,0 +1,52 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="description" content="Тестовый стенд для проверки связи с рейтингом музея.">
+<title>Тестовый стенд</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@600;700;800&amp;display=swap&amp;subset=cyrillic" rel="stylesheet">
+<link rel="stylesheet" href="css/app.css">
+</head>
+<body>
+<noscript><p class="status">Для работы экрана нужен включённый JavaScript.</p></noscript>
+<div class="app">
+  <header class="bar">
+    <div class="bar__title">
+      <h1>Тестовый стенд</h1>
+      <p class="bar__sub">Проверка связи: выберите зверя, наберите очки и отправьте их в рейтинг.</p>
+    </div>
+    <label class="field">Игра
+      <select id="game">
+        <option value="test-a">Тест А</option>
+        <option value="test-b">Тест Б</option>
+        <option value="test-c">Тест В</option>
+      </select>
+    </label>
+    <a class="btn btn--quiet" href="index.html">К рейтингу</a>
+  </header>
+  <main class="view stand">
+    <section class="stand__play" id="play" aria-live="polite">
+      <h2 id="play-title">Выберите зверя внизу и нажмите «Старт»</h2>
+      <p class="stand__score" id="score" hidden>0</p>
+      <div class="stand__row" id="gain" hidden>
+        <button class="btn" type="button" data-p="10">+10</button>
+        <button class="btn" type="button" data-p="50">+50</button>
+        <button class="btn" type="button" data-p="100">+100</button>
+        <button class="btn" type="button" data-p="rnd">Случайно</button>
+      </div>
+      <button class="btn btn--primary" type="button" id="finish" hidden>Закончить и отправить</button>
+    </section>
+    <footer class="stand__foot">
+      <div id="picker"></div>
+      <button class="btn btn--primary" type="button" id="start" disabled>Старт</button>
+    </footer>
+  </main>
+</div>
+<p class="status" id="status" role="status" hidden></p>
+<script src="sdk/museum-sdk.js"></script>
+<script src="js/stand.js"></script>
+</body>
+</html>

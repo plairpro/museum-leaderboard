@@ -1,0 +1,90 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="description" content="Рейтинг группы в научном музее: баллы со стендов и молекулы в жидкости и газе.">
+<title>Рейтинг группы</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@600;700;800&amp;display=swap&amp;subset=cyrillic" rel="stylesheet">
+<link rel="stylesheet" href="css/app.css">
+</head>
+<body>
+<noscript><p class="status">Для работы экрана нужен включённый JavaScript.</p></noscript>
+<div class="app">
+  <header class="bar">
+    <div class="bar__title">
+      <h1>Рейтинг группы</h1>
+      <p class="bar__sub" id="sub">Очки появляются сами, как только кто-то закончит игру на стенде.</p>
+    </div>
+    <div class="modes" role="tablist" aria-label="Что показать на экране">
+      <button class="btn" role="tab" id="tab-list" aria-controls="view-list" aria-selected="true" data-mode="list">Лидерборд</button>
+      <button class="btn" role="tab" id="tab-liquid" aria-controls="view-lab" aria-selected="false" tabindex="-1" data-mode="liquid">Жидкость</button>
+      <button class="btn" role="tab" id="tab-gas" aria-controls="view-lab" aria-selected="false" tabindex="-1" data-mode="gas">Газ</button>
+    </div>
+    <button class="btn btn--quiet" id="keeper-open" type="button">Смотритель</button>
+  </header>
+
+  <main class="view" id="view-list" role="tabpanel" aria-labelledby="tab-list">
+    <ul class="skeleton" id="loading" aria-label="Загружаю рейтинг"><li></li><li></li><li></li><li></li><li></li><li></li><li></li><li></li><li></li><li></li></ul>
+    <ol class="ranks" id="ranks" aria-label="Места" hidden></ol>
+    <div class="state" id="empty" hidden>
+      <h2>Группа ещё не выбрала аватаров</h2>
+      <p>Каждый выбирает зверя с тремя буквами. Потом этого зверя нужно найти внизу экрана на стенде перед игрой.</p>
+      <a class="btn btn--primary" href="register.html">Выбрать аватаров</a>
+    </div>
+  </main>
+
+  <main class="view" id="view-lab" role="tabpanel" hidden>
+    <div class="lab">
+      <div class="vessel" id="vessel"><canvas id="sim" aria-label="Молекулы группы в выбранной среде" role="img"></canvas></div>
+      <aside class="note" id="note" aria-live="polite">
+        <h2 id="note-title">Жидкость</h2>
+        <p id="note-text"></p>
+        <p id="note-text-2"></p>
+        <ul class="legend" aria-label="Как баллы превращаются в связи">
+          <li class="legend__head">Баллы решают, сколько связей держит молекула</li>
+          <li><span class="dots" style="--n:1"><i style="--a:0deg"></i></span><span><b>1 связь</b>, как у водорода H</span></li>
+          <li><span class="dots"><i style="--a:0deg"></i><i style="--a:180deg"></i></span><span><b>2 связи</b>, как у кислорода O</span></li>
+          <li><span class="dots"><i style="--a:0deg"></i><i style="--a:120deg"></i><i style="--a:240deg"></i></span><span><b>3 связи</b>, как у азота N</span></li>
+          <li><span class="dots"><i style="--a:0deg"></i><i style="--a:90deg"></i><i style="--a:180deg"></i><i style="--a:270deg"></i></span><span><b>4 связи</b>, как у углерода C: это четверть лидеров</span></li>
+        </ul>
+      </aside>
+    </div>
+  </main>
+</div>
+
+<p class="status" id="status" role="status" hidden></p>
+
+<dialog class="keeper" id="keeper" aria-labelledby="keeper-title">
+  <div class="keeper__head">
+    <div>
+      <h2 id="keeper-title">Смотритель</h2>
+      <p class="keeper__hint" id="keeper-hint">Введите PIN-код</p>
+    </div>
+    <button class="btn btn--quiet" type="button" data-close>Закрыть</button>
+  </div>
+  <div id="keeper-pin">
+    <div class="pin-dots" id="pin-dots" aria-hidden="true"><i></i><i></i><i></i><i></i></div>
+    <div class="keypad" id="keypad">
+      <button class="btn" type="button" data-k="1">1</button><button class="btn" type="button" data-k="2">2</button><button class="btn" type="button" data-k="3">3</button>
+      <button class="btn" type="button" data-k="4">4</button><button class="btn" type="button" data-k="5">5</button><button class="btn" type="button" data-k="6">6</button>
+      <button class="btn" type="button" data-k="7">7</button><button class="btn" type="button" data-k="8">8</button><button class="btn" type="button" data-k="9">9</button>
+      <button class="btn btn--small" type="button" data-k="del" aria-label="Стереть цифру">Стереть</button><button class="btn" type="button" data-k="0">0</button><button class="btn btn--primary btn--small" type="button" data-k="ok">Войти</button>
+    </div>
+  </div>
+  <div class="actions" id="keeper-actions" hidden>
+    <button class="btn btn--danger" type="button" id="reset">Сбросить лидерборд и аватары</button>
+    <a class="btn" href="register.html">Выбор аватаров для группы</a>
+    <a class="btn" href="stand.html">Тестовый стенд</a>
+    <button class="btn" type="button" id="fullscreen">Во весь экран</button>
+    <p class="actions__info" id="backend-info"></p>
+  </div>
+</dialog>
+
+<script src="sdk/museum-sdk.js"></script>
+<script src="js/sim.js"></script>
+<script src="js/board.js"></script>
+</body>
+</html>
